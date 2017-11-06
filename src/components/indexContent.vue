@@ -15,7 +15,7 @@
         <mu-grid-list class="gridlist">
             <mu-sub-header>推荐歌单</mu-sub-header>
             <mu-grid-tile v-for="(item, index) in list" :key="index">
-                <router-link :to="`/song/list?id=${item.id}`" class="router-link"></router-link>
+                <router-link :to="{name:'songList', params: {id: item.id}}" class="router-link"></router-link>
                 <img :src="item.picUrl"/></router-link>
                 <span slot="title">{{item.name}}</span>
                 <span slot="subTitle">by <b>{{item.copywriter}}</b></span>

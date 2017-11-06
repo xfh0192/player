@@ -34,6 +34,6 @@ app.use('/banner', require('./router/banner'))
 app.use('/personalized', require('./router/personalized'))
 
 // 歌单详情
-app.use('/plyalist/detail', require('./router/playlist_detail'))
+app.use('/playlist/detail', require('./router/playlist_detail'))
 
 module.exports = app

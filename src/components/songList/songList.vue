@@ -11,15 +11,21 @@
             </mu-icon-menu>
         </mu-appbar>
         <mu-card>
-             <mu-card-media title="Image Title" subTitle="Image Sub Title">
-                <img src="http://p1.music.126.net/23GqdmZsMtVNFgJ7ZTQzgg==/18941286811735327.jpg?param=140y140"/>
+             <mu-card-media :title="playlist.name" :subTitle="creator.nickname">
+                 <div class="headBg" :style="headBgObject"></div>
+                 <div class="headWrap">
+                     <img :src="head_bg"/>
+                 </div>
             </mu-card-media>
         </mu-card>
 
         <mu-list>
-            <template v-for="item in list">
-                <!-- <mu-list-item :title="item"></mu-list-item> -->
-                <mu-list-item>{{item}}</mu-list-item>
+            <template v-for="(item, index) in tracks">
+                
+                <mu-list-item :title="item.name" :describeText="item.ar[0].name + ' - ' + item.al.name" inset>
+                    <i class="listIndex">{{index+1}}</i>
+                    <mu-icon value="done" slot="right"/>
+                </mu-list-item>
             </template>
         </mu-list>
         <!-- <mu-infinite-scroll :scroller="scroller" :loading="loading" @load="loadMore"/> -->
@@ -32,30 +38,56 @@ import axios from 'axios'
 export default {
     name: 'songList',
     data: () => {
-        const list = []
-        for (let i = 0; i < 10; i++) {
-            list.push('item' + (i + 1))
-        }
+        // const list = []
+        // for (let i = 0; i < 10; i++) {
+        //     list.push('item' + (i + 1))
+        // }
         return {
-            list
+            list: {},
+            playlist: {},
+            tracks: [],
+            creator: {},
+            head_bg: ''
         }
     },
     computed: {
-
+        headBgObject: function () {
+            return {
+                backgroundImage: `url(${this.head_bg})`
+            }
+        }
     },
     methods: {
         back: function() {
             this.$router.push({path: '/index'});
         },
         getDetail: function () {
-            return axios.get('/playlist/detail')
+            let id = this.$route.params.id;
+            console.log(id)
+            return axios.get(`/playlist/detail`, {
+                params: {
+                    id: id
+                }
+            })
         }
     },
-    mounted: function () {
-        // this.getDetail()
-        // .then( (res) => {
-        //     console.log(res)
-        // })
+    created: function () {
+        this.getDetail()
+        .then( (res) => {
+            this.list = res.data;
+            this.head_bg = res.data.playlist.coverImgUrl + "?param=160y160";
+
+            // playlist
+            this.playlist = res.data.playlist;
+            // creator
+            this.creator = res.data.playlist.creator;
+            //列表
+            this.tracks = res.data.playlist.tracks;
+            console.log(res.data)
+        })
+        .catch( (err) => {
+            console.log(err)
+        })
     }
 }
 </script>
@@ -70,7 +102,36 @@ export default {
 .mu-card {
     margin-top: 5rem;
 }
-.mu-card-media img{
+.mu-card-media {
+    overflow: hidden;
     height: 20rem;
+    .headBg{
+        filter: blur(20);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 50%;
+        filter: blur(20px);
+        transform: scale(1.5);
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        // z-index:1;
+    }
+    .headWrap{
+        position: relative;
+        img {
+            margin: 1rem 2rem;
+        }
+    }
+}
+
+.mu-list {
+    .listIndex{
+        position: absolute;
+        left: 2.5rem;
+        top: 2rem;
+    }
 }
 </style>

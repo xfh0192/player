@@ -18,7 +18,7 @@ export default new Router({
       component: index
     },
     {
-      path: '/song/list?{id}',
+      path: '/songlist/:id',
       name: 'songList',
       component: songList
     }
