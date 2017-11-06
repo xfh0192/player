@@ -11,7 +11,7 @@
             </mu-icon-menu>
         </mu-appbar>
         <mu-card>
-             <mu-card-media :title="playlist.name" :subTitle="creator.nickname">
+             <mu-card-media :title="playlist.name" :subTitle="creator.nickname" titleClass="title">
                  <div class="headBg" :style="headBgObject"></div>
                  <div class="headWrap">
                      <img :src="head_bg"/>
@@ -34,6 +34,7 @@
 
 <script>
 import axios from 'axios'
+import loading from './loading.gif'
 
 export default {
     name: 'songList',
@@ -47,7 +48,7 @@ export default {
             playlist: {},
             tracks: [],
             creator: {},
-            head_bg: ''
+            head_bg: loading
         }
     },
     computed: {
@@ -75,7 +76,10 @@ export default {
         this.getDetail()
         .then( (res) => {
             this.list = res.data;
-            this.head_bg = res.data.playlist.coverImgUrl + "?param=160y160";
+            setTimeout(function(){
+                this.head_bg = res.data.playlist.coverImgUrl + "?param=160y160";
+            }.bind(this), 2000)
+            
 
             // playlist
             this.playlist = res.data.playlist;
@@ -123,8 +127,18 @@ export default {
         position: relative;
         img {
             margin: 1rem 2rem;
+            height: 160px;
+            width: 160px;
         }
     }
+    .mu-card-media-title {
+        .title{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    
 }
 
 .mu-list {
