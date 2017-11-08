@@ -72,7 +72,7 @@ export default {
             })
         }
     },
-    created: function () {
+    mounted: function () {
         this.getDetail()
         .then( (res) => {
             this.list = res.data;
@@ -91,6 +91,25 @@ export default {
         })
         .catch( (err) => {
             console.log(err)
+        })
+
+        this.$nextTick(function () {
+            setTimeout(_findTitle.bind(this), 1000)
+
+            function _findTitle () {
+                // console.log(this.$el)
+                var title = document.querySelector(".mu-card-title.title")
+                
+                if(title){
+                    title.style.cssText = `text-overflow: ellipsis;
+                                        overflow: hidden;
+                                        white-space: nowrap;
+                                        width: 90%;`;
+                }else{
+                    setTimeout(_findTitle.bind(this), 1000)
+                }
+            }
+            
         })
     }
 }
@@ -131,15 +150,9 @@ export default {
             width: 160px;
         }
     }
-    .mu-card-media-title {
-        .title{
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    }
-    
+
 }
+
 
 .mu-list {
     .listIndex{
