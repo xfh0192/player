@@ -36,4 +36,10 @@ app.use('/personalized', require('./router/personalized'))
 // 歌单详情
 app.use('/playlist/detail', require('./router/playlist_detail'))
 
+// 获取音乐详情
+app.use('/song/detail', require('./router/song_detail'))
+
+// 获取音乐 url
+app.use('/music/url', require('./router/music_url'))
+
 module.exports = app

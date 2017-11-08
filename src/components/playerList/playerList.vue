@@ -2,9 +2,10 @@
     <div id="playerList">
         <mu-list>
             <!-- <mu-list-item v-for="(item, index) in list"></mu-list-item> -->
-            <mu-list-item v-for="item in list" :key="item"
-                 :title="item + 'hello'" :describeText="item + 'Int'">
-                <mu-icon value="music_note" slot="left"/>
+            <mu-list-item v-for="(item, index) in list" :key="index" @click="play(item)"
+                 :title="item.name" :describeText="item.ar[0].name + '-' + item.al.name">
+                <i class="listIndex">{{index+1}}</i>
+                <mu-icon value="music_note" slot="left" v-if="true"/>
             </mu-list-item>
         </mu-list>
     </div>
@@ -19,7 +20,17 @@ export default {
         //     list.push('item' + (i + 1))
         // }
         return {
-            list
+            // list: []
+        }
+    },
+    computed: {
+        list: function () {
+            return this.$store.state.playerList;
+        }
+    },
+    methods: {
+        play: function (item) {
+            this.$store.commit("play", item);
         }
     }
 }
@@ -31,5 +42,12 @@ export default {
     margin: 5rem 0;
     overflow-y: auto;
     overflow-x: hidden;
+    .mu-list {
+        .listIndex{
+            position: absolute;
+            left: 2.5rem;
+            top: 2rem;
+        }
+    }
 }
 </style>

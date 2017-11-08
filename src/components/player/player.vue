@@ -1,16 +1,18 @@
 <template>
     <transition name="player">
         <div id="player" v-show="togglePlayer">
-            <mu-appbar title="Title">
+            <mu-appbar>
                 <mu-icon-button icon="close" slot="left" @click="closePlayer"/>
                 <p class="songName" slot="default">
-                    title
+                    <h2>{{playingSong.name}}</h2>
+                    <h3>{{playingSong.ar[0].name}}</h3>
                 </p>
-                <mu-icon-button icon="" slot="right"/>
+                <mu-icon-button icon="list" slot="right"/>
             </mu-appbar>
 
             <div class="coverBox" circle :zDepth="3">
-                <img src="http://p1.music.126.net/nJhoptd3wcASHmo8KK9log==/18742275208733047.jpg?param=140y140"/>
+                <!-- <img src="http://p1.music.126.net/nJhoptd3wcASHmo8KK9log==/18742275208733047.jpg?param=140y140"/> -->
+                <img :src="playingSong.al.picUrl"/>
             </div>
 
             <div id="ctrl">
@@ -23,9 +25,9 @@
                     <li><mu-icon-button icon="play_circle_outline"/></li>
                 </ul>
 
-                <!-- <audio :src='playingItem'>
+                <audio :src='playingSong.musicUrl'>
                     当前浏览器不支持audio
-                </audio> -->
+                </audio>
             </div>
 
         </div>
@@ -43,6 +45,9 @@ export default {
     computed: {
         togglePlayer: function () {
             return this.$store.state.togglePlayer;
+        },
+        playingSong: function () {
+            return this.$store.state.playingSong;
         }
     },
     methods: {
@@ -94,7 +99,8 @@ export default {
         left: 50%;
         margin: -70px 0 0 -70px;
         img {
-            
+            height: 140px;
+            width: 140px;
         }
     }
     #ctrl {

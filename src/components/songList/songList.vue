@@ -21,8 +21,8 @@
 
         <mu-list>
             <template v-for="(item, index) in tracks">
-                
-                <mu-list-item :title="item.name" :describeText="item.ar[0].name + ' - ' + item.al.name" inset>
+                <mu-list-item :title="item.name" inset  @click="addToList(item)"
+                    :describeText="item.ar[0].name + ' - ' + item.al.name">
                     <i class="listIndex">{{index+1}}</i>
                     <mu-icon value="done" slot="right"/>
                 </mu-list-item>
@@ -70,6 +70,9 @@ export default {
                     id: id
                 }
             })
+        },
+        addToList: function (item) {
+            this.$store.dispatch('addAndPlay', item);
         }
     },
     mounted: function () {
