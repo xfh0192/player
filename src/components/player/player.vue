@@ -17,12 +17,17 @@
 
             <div id="ctrl">
                 <mu-linear-progress mode="determinate" :value="value"/>
-                
+
+                {{currentTime}}:{{duration}} || {{value}}
                 <ul>
                     <li><mu-icon-button icon="first_page" @click="prev"/></li>
                     <li><mu-icon-button icon="last_page" @click="next"/></li>
-                    <li><mu-icon-button icon="pause_circle_outline" @click="pause"/></li>
-                    <li><mu-icon-button icon="play_circle_outline" @click="play"/></li>
+                    <li v-if="$playing">
+                        <mu-icon-button icon="pause_circle_outline" @click="pause"/>
+                    </li>
+                    <li v-if="!$playing">
+                        <mu-icon-button icon="play_circle_outline" @click="play"/>
+                    </li>
                 </ul>
 
                 <audio :src='playingSong.musicUrl' controls>
@@ -39,8 +44,11 @@ export default {
     name: 'player',
     data: () => {
         return {
-            value: 0,
-            audio: {}
+            // value: 0,
+            audio: {},
+            currentTime: 0,
+            duration: 0
+            // $playing: false
         }
     },
     computed: {
@@ -48,8 +56,11 @@ export default {
             return this.$store.state.togglePlayer;
         },
         playingSong: function () {
-            this.audio.play();
             return this.$store.state.playingSong;
+        },
+        value: function () {
+            console.log(this.currentTime / this.duration * 100)
+            return (this.currentTime / this.duration * 100) || 0;
         }
     },
     methods: {
@@ -57,9 +68,14 @@ export default {
             this.$store.commit("closePlayer")
         },
         play: function () {
+            this.$playing = true;
+            // this.audio.$playing = true;
             this.audio.play();
         },
         pause: function () {
+            // this.$set(this.audio, '$playing', false);
+            // this.audio.$playing = false;
+            this.$playing = false;
             this.audio.pause();
         },
         prev: function () {
@@ -68,11 +84,33 @@ export default {
         next: function () {
             this.$store.commit("next");
         }
+        // getCurrentTime: function () {
+        //     return this.audio.el && this.audio.el.currentTime || 0;
+        // }
+    },
+    watch: {
+        audio: {
+            deep: true,
+            handler: function (val, oldValue) {
+                this.currentTime = val.currentTime;
+            }
+        }
     },
     mounted: function () {
-        var audio = document.querySelector("audio");
+        var audio = this.$el.querySelector("audio");
         if (audio) {
             this.audio = audio;
+            // this.$set(this.audio, '$playing', false);
+            this.$playing = false;
+            audio.addEventListener("canplay", function () {
+                this.play();
+                this.duration = this.audio.duration;
+            }.bind(this))
+
+            audio.addEventListener("ended", function () {
+                this.next()
+                // this.currentTime = 0;
+            }.bind(this))
         }
     }
 }

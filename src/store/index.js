@@ -39,8 +39,30 @@ export default new Vuex.Store({
             }
             console.log("playingSong change:" + JSON.stringify(payload))
         },
-        prev: function () {
-            
+        prev (state) {
+            let playingSong = state.playingSong;
+            let list = state.playerList;
+            let index = list.findIndex(function (item, index) {
+                return playingSong == item;
+            })
+            if (index) {
+                state.playingSong = list[index - 1];
+            } else if (index === 0) {
+                state.playingSong = list[list.length - 1];
+            }
+        },
+        next (state) {
+            let playingSong = state.playingSong;
+            let list = state.playerList;
+            let index = list.findIndex(function (item, index) {
+                return playingSong == item;
+            })
+
+            if ((index || index === 0) && index < list.length - 1) {
+                state.playingSong = list[index + 1];
+            } else if (index === list.length - 1) {
+                state.playingSong = list[0]
+            }
         }
     },
     actions: {
