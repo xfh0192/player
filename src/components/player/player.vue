@@ -19,13 +19,13 @@
                 <mu-linear-progress mode="determinate" :value="value"/>
                 
                 <ul>
-                    <li><mu-icon-button icon="first_page"/></li>
-                    <li><mu-icon-button icon="last_page"/></li>
-                    <li><mu-icon-button icon="pause_circle_outline"/></li>
-                    <li><mu-icon-button icon="play_circle_outline"/></li>
+                    <li><mu-icon-button icon="first_page" @click="prev"/></li>
+                    <li><mu-icon-button icon="last_page" @click="next"/></li>
+                    <li><mu-icon-button icon="pause_circle_outline" @click="pause"/></li>
+                    <li><mu-icon-button icon="play_circle_outline" @click="play"/></li>
                 </ul>
 
-                <audio :src='playingSong.musicUrl'>
+                <audio :src='playingSong.musicUrl' controls>
                     当前浏览器不支持audio
                 </audio>
             </div>
@@ -39,7 +39,8 @@ export default {
     name: 'player',
     data: () => {
         return {
-            value: 0
+            value: 0,
+            audio: {}
         }
     },
     computed: {
@@ -47,6 +48,7 @@ export default {
             return this.$store.state.togglePlayer;
         },
         playingSong: function () {
+            this.audio.play();
             return this.$store.state.playingSong;
         }
     },
@@ -54,15 +56,24 @@ export default {
         closePlayer: function () {
             this.$store.commit("closePlayer")
         },
-        hello: function () {
-            console.log("hello")
+        play: function () {
+            this.audio.play();
         },
-        hi: function () {
-            console.log("hi")
+        pause: function () {
+            this.audio.pause();
+        },
+        prev: function () {
+            this.$store.commit("prev");
+        },
+        next: function () {
+            this.$store.commit("next");
         }
     },
-    mounted: () => {
-        
+    mounted: function () {
+        var audio = document.querySelector("audio");
+        if (audio) {
+            this.audio = audio;
+        }
     }
 }
 </script>

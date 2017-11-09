@@ -10,7 +10,10 @@ export default new Vuex.Store({
         indexName: 'indexContent',
         indexList: [],
         playerList: [],
-        playingSong: {}
+        playingSong: {
+            ar: [{name: ''}],
+            al: {}
+        }
     },
     mutations: {
         openPlayer (state) {
@@ -35,6 +38,9 @@ export default new Vuex.Store({
                 state.playingSong = payload;
             }
             console.log("playingSong change:" + JSON.stringify(payload))
+        },
+        prev: function () {
+            
         }
     },
     actions: {
